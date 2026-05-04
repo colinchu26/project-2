@@ -5,7 +5,6 @@ import { useState } from "react"
 import "./App.css"
 
 function Top(x){
-
   return(
     <div
       style={{
@@ -14,6 +13,9 @@ function Top(x){
         backgroundSize: "cover"
       }}
     >
+
+
+
 
       <h1>{x.title} </h1>
       <img src={img1} alt="park photo" width="300" ></img>
@@ -33,49 +35,46 @@ function Top(x){
 // functi
 
 
-// due Mon 3.16.26 
+function Options({ word, setWord, sort, setSort, only, setOnly }) {
+  const handleSearchChange = (e) => setWord(e.target.value)
+  const handleSortChange = (e) => setSort(e.target.value)
+  const handleOnlyChange = () => setOnly(!only)
 
-function Options(p){
-
-  return(
-
+  return (
     <div>
-
       <div>
-        <label>search </label>
+        <label htmlFor="search">Search </label>
         <input
-        value={p.word}
-        onChange={(e)=>p.setWord(e.target.value)}
+          id="search"
+          value={word}
+          onChange={handleSearchChange}
         />
       </div>
 
       <div>
-        <label>sort </label>
-
+        <label htmlFor="sort">Sort </label>
         <select
-         value={p.sort}
-         onChange={(e)=>p.setSort(e.target.value)}
+          id="sort"
+          value={sort}
+          onChange={handleSortChange}
         >
-          <option value="name">name</option>
-          <option value="state">state</option>
-          <option value="likes">likes</option>
+          <option value="name">Name</option>
+          <option value="state">State</option>
+          <option value="likes">Likes</option>
         </select>
-
       </div>
 
       <div>
-        <label>visited only </label>
+        <label htmlFor="visited">Visited only </label>
         <input
+          id="visited"
           type="checkbox"
-          checked={p.only}
-          onChange={()=>p.setOnly(!p.only)}
+          checked={only}
+          onChange={handleOnlyChange}
         />
       </div>
-
     </div>
-
   )
-
 }
 
 // ---- come back to this on Friday
