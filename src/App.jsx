@@ -250,18 +250,70 @@ export default function App(){
   const visitedCount = parks.filter(p=>p.visited).length
   const selectedPark = parks.find(p=>p.id===selected)
 
-// ask matt abt this part
-  return(
+function ParkGame({ parks, setSelected }) {
+  const [pts, setPts] = useState(() =>
+    parks.map(p => ({
+      id: p.id,
+      x: Math.random() * 380,
+      y: Math.random() * 180,
+    }))
+  );
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPts(old =>
+        old.map(d => ({
+          ...d,
+          x: (d.x + (Math.random() * 40 - 20) + 400) % 400,
+          y: (d.y + (Math.random() * 30 - 15) + 200) % 200,
+        }))
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "420px",
+        height: "220px",
+        border: "2px solid black",
+        background: "#e8eefc",
+        overflow: "hidden",
+      }}
+    >
+      {pts.map(pt => {
+        const p = parks.find(a => a.id === pt.id);
+        return (
+          <div
+            key={pt.id}
+            onClick={() => setSelected(pt.id)}
+            style={{
+              position: "absolute",
+              left: pt.x,
+              top: pt.y,
+              cursor: "pointer",
+              fontSize: "18px",
+            }}
+            title={p.name}
+          >
+            {p.visited ? "🏜️" : "🏞️"}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+  return (
     <div>
-
       <Top
         title="Colin's National Parks tracker"
         desc="MA1!"
         count={visitedCount}
         fav={favorite}
       />
-
 
       <Options
         word={search}
@@ -274,9 +326,7 @@ export default function App(){
 
       <p>showing: {list.length}</p>
       <div>
-
-        {/* list of parks */}
-        {list.map(p=>(
+        {list.map(p => (
           <Card
             key={p.id}
             data={p}
@@ -287,100 +337,39 @@ export default function App(){
             save={saveNote}
           />
         ))}
-
       </div>
 
       <Info current={selectedPark} />
-      <hr/>
+      <hr />
       <h3>more park ideas (work in progress)</h3>
-
       <p>will add later</p>
 
       <input
         placeholder="type a park name..."
         value={idea}
-        onChange={(e)=>setIdea(e.target.value)}
+        onChange={e => setIdea(e.target.value)}
       />
-      <button onClick={()=>{
-        if(idea.trim() !== ""){
-          setIdeas([...ideas, idea])
-          setIdea("")
+      <button onClick={() => {
+        if (idea.trim() !== "") {
+          setIdeas([...ideas, idea]);
+          setIdea("");
         }
       }}>
-      add idea
+        add idea
       </button>
 
       <ul>
-        {ideas.map((i,idx)=>(
+        {ideas.map((i, idx) => (
           <li key={idx}>{i}</li>
         ))}
       </ul>
 
-      <hr/>
+      <hr />
+      <h3>experimental park game</h3>
+      <p>moving parts still work in progress</p>
 
-<h3>experimental park game</h3>
-<p>moving parts still work in progress</p>
+      <ParkGame parks={parks} setSelected={setSelected} />
 
-{(() => {
-
-  const [pts,setPts] = useState(
-    parks.map(p=>({
-      id:p.id,
-      x:Math.random()*380,
-      y:Math.random()*180
-    }))
-  )
-  if(!window.__parkSim){
-    window.__parkSim = true
-    setInterval(()=>{
-      setPts(old =>
-        old.map(d=>({
-          ...d,
-          x:(d.x + (Math.random()*40-20)+400)%400,
-          y:(d.y + (Math.random()*30-15)+200)%200
-        }))
-      )
-    },1000)
-  }
-  return(
-    <div
-      style={{
-        position:"relative",
-        width:"420px",
-        height:"220px",
-        border:"2px solid black",
-        background:"#e8eefc",
-        overflow:"hidden"
-      }}
-    >
-
-      {pts.map(pt=>{
-
-        const p = parks.find(a=>a.id===pt.id)
-        return(
-          <div
-            key={pt.id}
-            onClick={()=>setSelected(pt.id)}
-            style={{
-              position:"absolute",
-              left:pt.x,
-              top:pt.y,
-              cursor:"pointer",
-              fontSize:"18px"
-            }}
-            title={p.name}
-          >
-            {p.visited ? "🏜️" : "🏞️"}
-          </div>
-        )
-      })}
     </div>
-  )
-})()}
-    </div>
-  )
+  );
 }
-// finish this part for MA2
-
-
-///
